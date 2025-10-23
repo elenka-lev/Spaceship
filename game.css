@@ -3,16 +3,23 @@
   margin: 0;
   padding: 0;
 }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: 'Bubblegum Sans', cursive;
   background-color: #0A1436;
   color: #FFFFFF;
+  overflow: hidden;
 }
 .container{
   position: relative;
   margin: 0 auto;  
   width: 500px;
-  height: 800px;
+  height: 100%;
   background: url('./images/bgd.png') center center/cover no-repeat;
 }
 .ship {

@@ -3,6 +3,9 @@ const yellowBtn = document.getElementById("ship2");
 const space = document.querySelector(".container");
 
 let player;
+let bullets = [];
+let asteroids = [];
+
 //переходимо до ігрового екрану з вибраним кораблем
 if (document.body.id === "select-page") { 
   yellowBtn.addEventListener("click", () => {
@@ -57,7 +60,9 @@ class Spaceship {
     const bulletX = this.x + this.element.offsetWidth / 2 - bulletWidth / 2; // центр пулі відносно корабля
     const bulletY = this.y - bulletHeight; // початкова позиція пулі над кораблем
 
-    new Bullet(bulletX, bulletY, this.bulletSrc, this.container); // створюємо нову пулю
+    const newBullet = new Bullet(bulletX, bulletY, this.bulletSrc, this.container); // створюємо нову пулю
+    bullets.push(newBullet);
+    
   }
   
 }
@@ -120,6 +125,10 @@ gameMove();
 class Bullet {
   constructor(x, y, src, container, width = 20, height = 55) {
     this.element = document.createElement("img");
+    this.x = x; 
+    this.y = y;
+    this.width = width;
+    this.height = height;
     this.container = container;
     this.element.src = src;
     this.element.classList.add("bullet");
@@ -133,17 +142,104 @@ class Bullet {
 
     this.fly();
   }
+  updatePosition() {
+    this.element.style.left = `${this.x}px`;
+    this.element.style.top = `${this.y}px`;
+    this.element.style.width = `${this.width}px`;
+    this.element.style.height = `${this.height}px`;
+  }
 
   fly() {
     const moveBullet = () => {
-      const currentY = parseFloat(this.element.style.top);
-      if (currentY < -50) {
+      this.y -= 8; // змінюємо позицію пулі вгору
+      this.updatePosition(); // оновлюємо DOM
+
+      if (this.y < -50) {
         this.element.remove();
         return;
       }
-      this.element.style.top = `${currentY - 8}px`; // швидкість польоту пулі
+      // this.element.style.top = `${currentY - 8}px`; // швидкість польоту пулі
       requestAnimationFrame(moveBullet);
     };
    requestAnimationFrame(moveBullet);
   }
   }
+//створюємо клас для астероїда
+class Asteroid {
+  constructor(src, container, width = 80, height = 80) {
+    this.element = document.createElement("img");
+    this.x = Math.floor(Math.random() * (container.offsetWidth - width));
+    this.y = 0;
+    this.width = width;
+    this.height = height;
+    this.container = container;
+    this.element.src = src;
+    this.element.classList.add("asteroid");
+    this.element.style.position = "absolute";
+    this.element.style.width = width + "px";
+    this.element.style.height = height + "px";
+    this.x = Math.floor(Math.random() * (container.offsetWidth - width));
+    this.y = 0;
+    this.updatePosition();
+
+    container.appendChild(this.element);
+    this.fall();
+  }
+  updatePosition() {
+    this.element.style.left = this.x + "px";
+    this.element.style.top = this.y + "px";
+  }
+
+  updatePosition() {
+    this.element.style.left = `${this.x}px`;
+    this.element.style.top = `${this.y}px`;
+    this.element.style.width = `${this.width}px`;
+    this.element.style.height = `${this.height}px`;
+  }
+
+  fall(speed = 3) {
+    const moveAsteroid = () => {
+      this.y += speed;
+      this.updatePosition();
+
+      if (this.y > this.container.offsetHeight) {
+        this.element.remove();
+        return;
+      }
+
+      requestAnimationFrame(moveAsteroid);
+    };
+    moveAsteroid();
+  }
+}
+//створюємо астероїди періодично
+setInterval(() => {
+  const asteroid = new Asteroid("./images/planet-08.png", space);
+  asteroids.push(asteroid);
+}, 2000);
+
+//робимо колізії пулі з астероїдами
+function checkCollisions() {
+  for (let b = bullets.length - 1; b >= 0; b--) {
+    for (let a = asteroids.length - 1; a >= 0; a--) {
+      const bullet = bullets[b];
+      const asteroid = asteroids[a];
+
+      if (
+        bullet.x < asteroid.x + asteroid.width &&
+        bullet.x + bullet.width > asteroid.x &&
+        bullet.y < asteroid.y + asteroid.height &&
+        bullet.y + bullet.height > asteroid.y
+      ) {
+        bullet.element.remove();
+        asteroid.element.remove();
+        bullets.splice(b, 1);
+        asteroids.splice(a, 1);
+      }
+    }
+  }
+
+  requestAnimationFrame(checkCollisions);
+}
+
+checkCollisions();
