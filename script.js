@@ -30,6 +30,8 @@ class Spaceship {
 
     this.gun = null;
     this.container.appendChild(this.element);
+    this.shootInterval = setInterval(() => this.shoot(), 500); // стріляємо кожні 500 мс
+    this.bulletSrc = "";
   }
   //оновлюємо позицію корабля
     updatePosition() {
@@ -47,18 +49,31 @@ class Spaceship {
     this.x = Math.min(this.container.offsetWidth - this.width, this.x + speed);
     this.updatePosition();
   }
+
+  //стріляємо з корабля
+  shoot() {
+    const bulletWidth = 10; 
+    const bulletHeight = 44;
+    const bulletX = this.x + this.element.offsetWidth / 2 - bulletWidth / 2; // центр пулі відносно корабля
+    const bulletY = this.y - bulletHeight; // початкова позиція пулі над кораблем
+
+    new Bullet(bulletX, bulletY, this.bulletSrc, this.container); // створюємо нову пулю
+  }
+  
 }
 
 class YellowShip extends Spaceship {
   constructor(container) {
     super(105, 96, container);
     this.element.src = './images/Quinjet-ship.png';
+    this.bulletSrc = './images/light.svg';
   }
 }
 class RedShip extends Spaceship {
   constructor(container) {
     super(100, 112, container);
     this.element.src = './images/Dreadnaught.png';
+    this.bulletSrc = './images/red.svg';
   }
 }
 
@@ -100,3 +115,35 @@ function gameMove() {
 }
 
 gameMove();
+
+//Додаємо клас для пулі
+class Bullet {
+  constructor(x, y, src, container, width = 20, height = 55) {
+    this.element = document.createElement("img");
+    this.container = container;
+    this.element.src = src;
+    this.element.classList.add("bullet");
+    this.element.style.position = "absolute";
+    this.element.style.width = `${width}px`;
+    this.element.style.height = `${height}px`;
+    this.element.style.left = `${x}px`;
+    this.element.style.top = `${y}px`;
+
+    container.appendChild(this.element);
+
+    this.fly();
+  }
+
+  fly() {
+    const moveBullet = () => {
+      const currentY = parseFloat(this.element.style.top);
+      if (currentY < -50) {
+        this.element.remove();
+        return;
+      }
+      this.element.style.top = `${currentY - 8}px`; // швидкість польоту пулі
+      requestAnimationFrame(moveBullet);
+    };
+   requestAnimationFrame(moveBullet);
+  }
+  }

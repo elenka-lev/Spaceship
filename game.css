@@ -15,3 +15,7 @@ body {
   height: 800px;
   background: url('./images/bgd.png') center center/cover no-repeat;
 }
+.ship {
+  width: 100px;
+  height: auto;
+}
