@@ -1,0 +1,51 @@
+* {
+  box-sizing: border-box; 
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Bubblegum Sans', cursive;
+  background-color: #0A1436;
+  color: #FFFFFF;
+}
+.container{
+  position: relative;
+  margin: 0 auto;  
+  width: 500px;
+  height: 800px;
+  background: url('./images/main-bgd.png') center center/cover no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+h1 {
+  font-size: 40px;
+  margin-bottom: 60px;
+  color: #FFFFFF;
+}
+.spaceships {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+.spaceship {
+  cursor: pointer;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 20px;
+  background-color: #0A1436;
+  color: #FFFFFF;
+  border: none;
+  transition: all 0.2s ease;
+}
+.spaceship:hover, .spaceship:focus {
+  transform: translateY(-4px); 
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+}
+img {
+  margin-bottom: 20px;
+}

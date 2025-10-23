@@ -1,0 +1,17 @@
+* {
+  box-sizing: border-box; 
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Bubblegum Sans', cursive;
+  background-color: #0A1436;
+  color: #FFFFFF;
+}
+.container{
+  position: relative;
+  margin: 0 auto;  
+  width: 500px;
+  height: 800px;
+  background: url('./images/bgd.png') center center/cover no-repeat;
+}
