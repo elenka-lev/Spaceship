@@ -77,7 +77,7 @@ class YellowShip extends Spaceship {
 class RedShip extends Spaceship {
   constructor(container) {
     super(100, 112, container);
-    this.element.src = "./images/dreadnaught.png";
+    this.element.src = "./images/redjet.png";
     this.bulletSrc = './images/red.svg';
   }
 }
