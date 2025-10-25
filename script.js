@@ -96,7 +96,7 @@ if (document.body.id === "game-page") {
   // управление клавіатурой
   let keys = {};
 
-// отслеживаем нажатие клавиш
+// відслідковуємо натискання клавіш
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
     keys[e.key] = true;
@@ -109,7 +109,22 @@ document.addEventListener('keyup', e => {
   }
 });
 
-// основной игровой цикл движения корабля
+const leftBtn = document.getElementById("left-btn");
+const rightBtn = document.getElementById("right-btn");
+
+// для кнопок на екрані
+leftBtn.addEventListener("mousedown", () => (keys["ArrowLeft"] = true));
+leftBtn.addEventListener("mouseup", () => (keys["ArrowLeft"] = false));
+rightBtn.addEventListener("mousedown", () => (keys["ArrowRight"] = true));
+rightBtn.addEventListener("mouseup", () => (keys["ArrowRight"] = false));
+
+// для мобильных экранов
+leftBtn.addEventListener("touchstart", () => (keys["ArrowLeft"] = true));
+leftBtn.addEventListener("touchend", () => (keys["ArrowLeft"] = false));
+rightBtn.addEventListener("touchstart", () => (keys["ArrowRight"] = true));
+rightBtn.addEventListener("touchend", () => (keys["ArrowRight"] = false));
+
+// рухаємо корабель відповідно до натиснутих клавіш
 function gameMove() {
   if (!player) return;
 
@@ -156,6 +171,11 @@ class Bullet {
 
       if (this.y < -50) {
         this.element.remove();
+        const index = bullets.indexOf(this); // видаляємо пулю з масиву
+        if (index > -1) {
+          bullets.splice(index, 1);
+          console.log(bullets);
+        }
         return;
       }
       // this.element.style.top = `${currentY - 8}px`; // швидкість польоту пулі
@@ -202,44 +222,81 @@ class Asteroid {
       this.y += speed;
       this.updatePosition();
 
-      if (this.y > this.container.offsetHeight) {
-        this.element.remove();
-        return;
-      }
+      if (window.gameEnded) return;
 
       requestAnimationFrame(moveAsteroid);
     };
     moveAsteroid();
   }
 }
+
+
 //створюємо астероїди періодично
-setInterval(() => {
-  const asteroid = new Asteroid("./images/planet-09.png", space);
-  asteroids.push(asteroid);
-}, 2000);
+if (document.body.id === "game-page") {
+  setInterval(() => {
+    const asteroid = new Asteroid("./images/planet-09.png", space);
+    asteroids.push(asteroid);
+  }, 2000);
 
-//робимо колізії пулі з астероїдами
-function checkCollisions() {
-  for (let b = bullets.length - 1; b >= 0; b--) {
-    for (let a = asteroids.length - 1; a >= 0; a--) {
-      const bullet = bullets[b];
-      const asteroid = asteroids[a];
+  //робимо колізії пулі з астероїдами
+  function checkCollisions() {
+    for (let b = bullets.length - 1; b >= 0; b--) {
+      for (let a = asteroids.length - 1; a >= 0; a--) {
+        const bullet = bullets[b];
+        const asteroid = asteroids[a];
 
-      if (
-        bullet.x < asteroid.x + asteroid.width &&
-        bullet.x + bullet.width > asteroid.x &&
-        bullet.y < asteroid.y + asteroid.height &&
-        bullet.y + bullet.height > asteroid.y
-      ) {
-        bullet.element.remove();
-        asteroid.element.remove();
-        bullets.splice(b, 1);
-        asteroids.splice(a, 1);
+        if (
+          bullet.x < asteroid.x + asteroid.width &&
+          bullet.x + bullet.width > asteroid.x &&
+          bullet.y < asteroid.y + asteroid.height &&
+          bullet.y + bullet.height > asteroid.y
+        ) {
+          bullet.element.remove();
+          asteroid.element.remove();
+          bullets.splice(b, 1);
+          asteroids.splice(a, 1);
+        }
       }
     }
+    if (player) {
+      for (let a = asteroids.length - 1; a >= 0; a--) {
+        const asteroid = asteroids[a];
+
+        if (
+          player.x < asteroid.x + asteroid.width &&
+          player.x + player.width > asteroid.x &&
+          player.y < asteroid.y + asteroid.height &&
+          player.y + player.height > asteroid.y
+        ) {
+          
+          gameOver();
+          return; 
+        }
+      }
+    }
+
+    requestAnimationFrame(checkCollisions);
   }
 
-  requestAnimationFrame(checkCollisions);
-}
+  checkCollisions();
 
-checkCollisions();
+  function gameOver() {
+    if (window.gameEnded) return;
+    window.gameEnded = true;
+
+    bullets.forEach((b) => b.element.remove());
+    asteroids.forEach((a) => a.element.remove());
+    bullets = [];
+    asteroids = [];
+
+    if (player?.shootInterval) clearInterval(player.shootInterval);
+
+    const modal = document.getElementById("game-over-modal");
+    modal.classList.remove("hidden");
+
+    const tryBtn = document.getElementById("try-again-btn");
+    tryBtn.addEventListener("click", () => {
+      window.location.href = "./choose.html";
+    });
+  }
+}

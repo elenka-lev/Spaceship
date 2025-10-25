@@ -12,7 +12,7 @@ body {
   position: relative;
   margin: 0 auto;  
   width: 500px;
-  height: 800px;
+  height: 100vh;
   background: url('./images/main-bgd.png') center center/cover no-repeat;
   display: flex;
   flex-direction: column;
@@ -31,6 +31,7 @@ h1 {
   gap: 30px;
 }
 .spaceship {
+  font-family: 'Bubblegum Sans', cursive;
   cursor: pointer;
   padding: 20px;
   display: flex;

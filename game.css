@@ -14,6 +14,7 @@ body {
   background-color: #0A1436;
   color: #FFFFFF;
   overflow: hidden;
+  height: 100vh;
 }
 .container{
   position: relative;
@@ -25,4 +26,84 @@ body {
 .ship {
   width: 100px;
   height: auto;
+}
+
+.touch-button {
+  position: absolute;
+  border: none;
+  bottom: 160px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #ff0095;
+  color: #ffffff;
+  font-size: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  user-select: none;
+}
+
+#left-btn {
+  left: 20px;
+}
+
+#right-btn {
+  right: 20px;
+}
+
+#right-btn:active,
+#left-btn:active,
+#right-btn:hover,
+#left-btn:hover,
+#right-btn:focus,
+#left-btn:focus {
+  border: none;
+  box-shadow: 0 0 10px #ff0095, 0 0 20px #ff0095, 0 0 30px #ff0095;
+}
+.modal.hidden {
+  display: none;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #1a3386;
+  padding: 30px 50px;
+  border-radius: 15px;
+  text-align: center;
+  color: #fff;
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+#try-again-btn {
+  font-family: 'Bubblegum Sans', cursive;;
+  cursor: pointer;
+  background: #0A1436;
+  text-align: center;
+  outline: none;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+#try-again-btn:hover, #try-again-btn:focus {
+  transform: translateY(-4px); 
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
 }
