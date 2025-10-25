@@ -70,7 +70,7 @@ class Spaceship {
 class YellowShip extends Spaceship {
   constructor(container) {
     super(105, 96, container);
-    this.element.src = './images/Quinjet-ship.png';
+    this.element.src = './images/Quinjet-Ship.png';
     this.bulletSrc = './images/light.svg';
   }
 }
@@ -214,7 +214,7 @@ class Asteroid {
 }
 //створюємо астероїди періодично
 setInterval(() => {
-  const asteroid = new Asteroid("./images/planet-08.png", space);
+  const asteroid = new Asteroid("./images/planet.png", space);
   asteroids.push(asteroid);
 }, 2000);
 
